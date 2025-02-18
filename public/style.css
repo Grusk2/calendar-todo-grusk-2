@@ -29,6 +29,7 @@
 	grid-template-columns: repeat(7, 1fr);
 	gap: 5px;
 	width: 100%;
+	cursor: pointer;
 	margin-top: 5px;
   }
   
@@ -65,8 +66,7 @@
 	padding: 20px;
 	justify-content: center;
   }
-  
-  /* Stil för varje todo-kort */
+
   .todo-card {
 	background: #ffffff;
 	border-radius: 12px;
@@ -86,8 +86,7 @@
 	transform: translateY(-3px);
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Stil för textinput i todo-kort */
+
   .todo-title {
 	font-size: 1.1rem;
 	font-weight: bold;
@@ -101,16 +100,32 @@
   .todo-title:disabled {
 	color: #555;
   }
-  
-  /* Datumfält */
+
   .todo-date {
 	font-size: 0.9rem;
 	color: #666;
 	font-weight: 500;
 	margin-bottom: 10px;
   }
+
+#selected-day-display {
+	font-size: 1.5rem;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 10px;
+	color: #333;
+  }
+
+  .selected-day {
+	background-color: #ffeb3b !important;
+	border: 2px solid #ff9800 !important;
+	color: black !important;
+	font-weight: bold;
+	transition: background 0.2s ease-in-out;
+  }
   
-  /* Knapp-styling */
+  
+
   button {
 	background: #4CAF50;
 	color: white;
@@ -127,18 +142,15 @@
 	transform: scale(1.05);
   }
   
-  /* Styling för completed todos */
   .completed {
 	background: #d4edda;
 	text-decoration: line-through;
   }
-  
-  /* Förfallna todos */
+
   .todo-card.expired {
 	background: #ffcccc;
   }
-  
-  /* Layoutanpassning på små skärmar */
+
   @media (max-width: 600px) {
 	#todo-list {
 	  grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));

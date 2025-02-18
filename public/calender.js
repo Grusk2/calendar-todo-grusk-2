@@ -2,8 +2,30 @@ import { getTodos } from './todos.js';
 
 const calendarBody = document.getElementById('calendar-body');
 const currentMonthElement = document.getElementById('current-month');
+const selectedDayDisplay = document.getElementById('selected-day-display');
 
 const daysOfWeek = ['Mån', 'Tis', 'Ons', 'Tors', 'Fre', 'Lör', 'Sön'];
+let selectedDayElement = null;
+
+export function updateCalendarTodos() {
+  const todos = getTodos();
+  const cells = document.querySelectorAll('[data-cy="calendar-cell"]');
+
+  cells.forEach((cell) => {
+    const dateElement = cell.querySelector('[data-cy="calendar-cell-date"]');
+    if (!dateElement) return;
+
+    const day = dateElement.textContent;
+    const monthYear = currentMonthElement.textContent;
+    const fullDate = new Date(`${monthYear} ${day}`).toISOString().split('T')[0];
+
+    const todosForDate = todos.filter(todo => todo.date === fullDate);
+    const todoCount = cell.querySelector('[data-cy="calendar-cell-todos"]');
+    if (todoCount) {
+      todoCount.textContent = todosForDate.length ? `(${todosForDate.length})` : '';
+    }
+  });
+}
 
 export function renderCalendar(month, year) {
   calendarBody.innerHTML = '';
@@ -13,9 +35,13 @@ export function renderCalendar(month, year) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const today = new Date();
-  const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+  today.setHours(0, 0, 0, 0); 
+  const todayDate = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
+  
+  const isCurrentMonth = todayMonth === month && todayYear === year;
 
-  // Skapa en container för veckodagar
   const headerRow = document.createElement('div');
   headerRow.classList.add('calendar-header-row');
   calendarBody.appendChild(headerRow);
@@ -49,27 +75,26 @@ export function renderCalendar(month, year) {
     const todoCount = document.createElement('span');
     todoCount.dataset.cy = 'calendar-cell-todos';
 
-    if (isCurrentMonth && day === today.getDate()) {
+    if (isCurrentMonth && day === todayDate) {
       cell.classList.add('current-day');
     }
 
     cell.appendChild(dateSpan);
     cell.appendChild(todoCount);
     daysContainer.appendChild(cell);
+
+    cell.addEventListener('click', () => {
+      const selectedDate = new Date(year, month, day).toISOString().split('T')[0];
+
+      if (selectedDayElement) {
+        selectedDayElement.classList.remove('selected-day');
+      }
+
+      cell.classList.add('selected-day');
+      selectedDayElement = cell;
+
+      selectedDayDisplay.textContent = `Vald dag: ${selectedDate}`;
+      selectedDayDisplay.dataset.selectedDate = selectedDate;
+    });
   }
-}
-
-export function updateCalendarTodos() {
-  const todos = getTodos();
-  const cells = document.querySelectorAll('[data-cy="calendar-cell"]');
-
-  cells.forEach((cell) => {
-    const date = cell.querySelector('[data-cy="calendar-cell-date"]').textContent;
-    const monthYear = currentMonthElement.textContent;
-    const fullDate = new Date(`${monthYear} ${date}`).toISOString().split('T')[0];
-
-    const todosForDate = todos.filter((todo) => todo.date === fullDate);
-    const todoCount = cell.querySelector('[data-cy="calendar-cell-todos"]');
-    todoCount.textContent = todosForDate.length ? `(${todosForDate.length})` : '';
-  });
 }
