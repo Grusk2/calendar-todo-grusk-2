@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalenderverktyg</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="welcome-segment" data-cy="welcome-segment">
+      <h1 id="current-date"></h1>
+      <p id="current-day"></p>
+    </section>
+
+    <div id="main-layout">
+      
+      <div id="calendar-section">
+        <h2 id="current-month"></h2>
+        <div id="month-buttons">
+          <button id="prev-month" data-cy="prev-month">Previous</button>
+          <button id="next-month" data-cy="next-month">Next</button>
+        </div>
+        <div id="calendar-body" data-cy="calendar-body"></div>
+      </div>
+    </div>
+  </div>
+  <div id="todo-section">
+    <h2>Todos</h2>
+    <form id="todo-form">
+      <input type="text" id="todo-title" data-cy="todo-title-input" placeholder="Todo Title" required />
+      <input type="date" id="todo-date" data-cy="todo-date-input" required />
+      <button type="submit" id="save-todo" data-cy="save-todo-button">Add Todo</button>
+    </form>
+    <ul id="todo-list" data-cy="todo-list"></ul>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
