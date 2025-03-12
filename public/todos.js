@@ -40,65 +40,102 @@ export function renderTodos() {
   const todos = getTodos();
   const todoList = document.getElementById('todo-list');
   todoList.innerHTML = '';
-  
+
   todos.forEach((todo) => {
     const card = document.createElement('div');
     card.classList.add('todo-card');
-    
+
+    // Kebab Menu Button (⋮)
+    const menuButton = document.createElement('button');
+    menuButton.textContent = '⋮';
+    menuButton.classList.add('kebab-menu-button');
+
+    // Dropdown Menu
+    const menuDropdown = document.createElement('div');
+    menuDropdown.classList.add('kebab-menu-dropdown');
+    menuDropdown.style.display = 'none';
+
+    // Edit Option
+    const editOption = document.createElement('button');
+    editOption.textContent = 'Edit';
+    editOption.classList.add('dropdown-option');
+    editOption.addEventListener('click', () => {
+      if (titleInput.disabled) {
+        titleInput.disabled = false;
+        titleInput.focus();
+        editOption.textContent = 'Save';
+      } else {
+        editTodo(todo.id, titleInput.value);
+        titleInput.disabled = true;
+        editOption.textContent = 'Edit';
+        renderTodos();
+      }
+      menuDropdown.style.display = 'none'; // Hide dropdown after action
+    });
+
+    // Delete Option
+    const deleteOption = document.createElement('button');
+    deleteOption.textContent = 'Delete';
+    deleteOption.classList.add('dropdown-option');
+    deleteOption.addEventListener('click', () => {
+      deleteTodo(todo.id);
+      renderTodos();
+    });
+
+    // Toggle Dropdown Visibility
+    menuButton.addEventListener('click', (event) => {
+      event.stopPropagation(); // Prevent closing immediately
+      menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+      if (!menuButton.contains(event.target) && !menuDropdown.contains(event.target)) {
+        menuDropdown.style.display = 'none';
+      }
+    });
+
+    // Append Dropdown Menu Options
+    menuDropdown.appendChild(editOption);
+    menuDropdown.appendChild(deleteOption);
+
+    // Container for Menu
+    const menuContainer = document.createElement('div');
+    menuContainer.classList.add('kebab-menu-container');
+    menuContainer.appendChild(menuButton);
+    menuContainer.appendChild(menuDropdown);
+
+    // Todo Title
     const titleInput = document.createElement('input');
     titleInput.type = 'text';
     titleInput.value = todo.title;
     titleInput.disabled = true;
     titleInput.classList.add('todo-title');
-    
+
+    // Todo Date
     const dateSpan = document.createElement('span');
     dateSpan.textContent = todo.date;
     dateSpan.classList.add('todo-date');
-    
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.dataset.action = 'edit';
-    editButton.dataset.id = todo.id;
-    editButton.addEventListener('click', () => {
-      if (titleInput.disabled) {
-        titleInput.disabled = false;
-        titleInput.focus();
-        editButton.textContent = 'Save';
-      } else {
-        editTodo(todo.id, titleInput.value);
-        titleInput.disabled = true;
-        editButton.textContent = 'Edit';
-        renderTodos();
-      }
-    });
 
+    // Mark as completed
     const toggleButton = document.createElement('button');
     toggleButton.textContent = todo.completed ? 'Undo' : 'Complete';
-    toggleButton.dataset.action = 'toggle';
     toggleButton.dataset.id = todo.id;
     toggleButton.addEventListener('click', () => {
       toggleTodoCompletion(todo.id);
       renderTodos();
     });
-    
+
     if (todo.completed) {
       card.classList.add('completed');
     }
-    
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.dataset.action = 'delete';
-    deleteButton.dataset.id = todo.id;
-    deleteButton.addEventListener('click', () => {
-      deleteTodo(todo.id);
-      renderTodos();
-    });
-    
+
+    // Append Elements
+    card.appendChild(menuContainer); // Add menu in top-right
     card.appendChild(titleInput);
     card.appendChild(dateSpan);
-    card.appendChild(editButton);
     card.appendChild(toggleButton);
-    card.appendChild(deleteButton);
+    
     todoList.appendChild(card);
   });
 }

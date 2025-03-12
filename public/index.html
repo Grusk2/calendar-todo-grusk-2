@@ -14,24 +14,24 @@
     </section>
 
     <div id="main-layout">
-      
       <div id="calendar-section">
-        <h2 id="current-month"></h2>
-        <div id="month-buttons">
-          <button id="prev-month" data-cy="prev-month">Previous</button>
-          <button id="next-month" data-cy="next-month">Next</button>
+        <div id="month-navigation">
+          <button id="prev-month" data-cy="prev-month">◀</button>
+          <h2 id="current-month"></h2>
+          <button id="next-month" data-cy="next-month">▶</button>
         </div>
         <div id="calendar-body" data-cy="calendar-body"></div>
       </div>
     </div>
   </div>
+
   <div id="todo-section">
-    <h2>Todos</h2>
+    <h1>Todos</h1>
+    <h1 id="selected-day-display">Välj en dag i kalendern</h1>
     <form id="todo-form">
       <input type="text" id="todo-title" data-cy="todo-title-input" placeholder="Todo Title" required />
       <button type="submit" id="save-todo" data-cy="save-todo-button">Add Todo</button>
     </form>
-    <h1 id="selected-day-display">Välj en dag i kalendern</h1>
     <ul id="todo-list" data-cy="todo-list"></ul>
   </div>
 

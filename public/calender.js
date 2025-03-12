@@ -3,10 +3,17 @@ import { getTodos } from './todos.js';
 const calendarBody = document.getElementById('calendar-body');
 const currentMonthElement = document.getElementById('current-month');
 const selectedDayDisplay = document.getElementById('selected-day-display');
+const prevMonthBtn = document.getElementById("prev-month");
+const nextMonthBtn = document.getElementById("next-month");
 
 const daysOfWeek = ['Mån', 'Tis', 'Ons', 'Tors', 'Fre', 'Lör', 'Sön'];
 let selectedDayElement = null;
 
+let currentDate = new Date();
+let currentMonth = currentDate.getMonth();
+let currentYear = currentDate.getFullYear();
+
+/** Updates the calendar with todo counts */
 export function updateCalendarTodos() {
   const todos = getTodos();
   const cells = document.querySelectorAll('[data-cy="calendar-cell"]');
@@ -27,6 +34,7 @@ export function updateCalendarTodos() {
   });
 }
 
+/** Renders the calendar */
 export function renderCalendar(month, year) {
   calendarBody.innerHTML = '';
   currentMonthElement.textContent = new Date(year, month).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
@@ -35,11 +43,11 @@ export function renderCalendar(month, year) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0); 
+  today.setHours(0, 0, 0, 0);
   const todayDate = today.getDate();
   const todayMonth = today.getMonth();
   const todayYear = today.getFullYear();
-  
+
   const isCurrentMonth = todayMonth === month && todayYear === year;
 
   const headerRow = document.createElement('div');
@@ -57,12 +65,15 @@ export function renderCalendar(month, year) {
   daysContainer.classList.add('calendar-days');
   calendarBody.appendChild(daysContainer);
 
-  for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+  // Add empty cells before the first day of the month
+  let startIndex = firstDay === 0 ? 6 : firstDay - 1;
+  for (let i = 0; i < startIndex; i++) {
     const emptyCell = document.createElement('div');
     emptyCell.classList.add('calendar-cell', 'empty');
     daysContainer.appendChild(emptyCell);
   }
 
+  // Render actual days
   for (let day = 1; day <= daysInMonth; day++) {
     const cell = document.createElement('div');
     cell.classList.add('calendar-cell');
@@ -97,4 +108,28 @@ export function renderCalendar(month, year) {
       selectedDayDisplay.dataset.selectedDate = selectedDate;
     });
   }
+
+  updateCalendarTodos(); // Update todos after rendering days
 }
+
+// Add event listeners to switch months
+prevMonthBtn.addEventListener("click", () => {
+  currentMonth--;
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderCalendar(currentMonth, currentYear);
+});
+
+nextMonthBtn.addEventListener("click", () => {
+  currentMonth++;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+  renderCalendar(currentMonth, currentYear);
+});
+
+// Initial render
+renderCalendar(currentMonth, currentYear);
