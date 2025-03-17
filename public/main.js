@@ -20,7 +20,7 @@ function initializeApp() {
 
 todoForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const title = document.getElementById('todo-title').value;
+  const title = document.getElementById('todo-title').value.trim();
   const selectedDate = selectedDayDisplay.dataset.selectedDate;
 
   if (!selectedDate) {
@@ -32,8 +32,19 @@ todoForm.addEventListener('submit', (e) => {
     addTodo(title, selectedDate);
     renderTodos();
     updateCalendarTodos();
+    localStorage.setItem('selectedDate', selectedDate);
     todoForm.reset();
   }
 });
+
+document.getElementById('todo-list').addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete-todo')) {
+      const todoId = parseInt(e.target.dataset.todoId, 10);
+      deleteTodo(todoId);
+      updateCalendarTodos();
+  }
+});
+
+
 
 initializeApp();

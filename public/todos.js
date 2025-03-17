@@ -10,15 +10,31 @@ export function saveTodos(todos) {
 
 export function addTodo(title, date) {
   const todos = getTodos();
-  todos.push({ id: Date.now(), title, date, completed: false });
-  saveTodos(todos.sort((a, b) => new Date(a.date) - new Date(b.date)));
+
+  const newTodo = {
+    id: Date.now(),
+    title,
+    date,
+    completed: false
+  };
+
+  todos.push(newTodo);
+  saveTodos(todos);
+
+  renderTodos();
+  updateCalendarTodos();
 }
 
-export function deleteTodo(id) {
+
+export function deleteTodo(todoId) {
   let todos = getTodos();
-  todos = todos.filter((todo) => todo.id !== parseInt(id));
+  todos = todos.filter(todo => todo.id !== todoId);
   saveTodos(todos);
+
+  renderTodos();
+  updateCalendarTodos();
 }
+
 
 export function toggleTodoCompletion(id) {
   let todos = getTodos();
@@ -70,7 +86,8 @@ export function renderTodos() {
         editOption.textContent = 'Edit';
         renderTodos();
       }
-      menuDropdown.style.display = 'none'; // Hide dropdown after action
+      menuDropdown.style.display = 'none';
+      updateCalendarTodos();
     });
 
     // Delete Option
@@ -80,62 +97,60 @@ export function renderTodos() {
     deleteOption.addEventListener('click', () => {
       deleteTodo(todo.id);
       renderTodos();
+      updateCalendarTodos();
     });
 
     // Toggle Dropdown Visibility
     menuButton.addEventListener('click', (event) => {
-      event.stopPropagation(); // Prevent closing immediately
+      event.stopPropagation();
       menuDropdown.style.display = menuDropdown.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (event) => {
       if (!menuButton.contains(event.target) && !menuDropdown.contains(event.target)) {
         menuDropdown.style.display = 'none';
       }
     });
 
-    // Append Dropdown Menu Options
     menuDropdown.appendChild(editOption);
     menuDropdown.appendChild(deleteOption);
 
-    // Container for Menu
     const menuContainer = document.createElement('div');
     menuContainer.classList.add('kebab-menu-container');
     menuContainer.appendChild(menuButton);
     menuContainer.appendChild(menuDropdown);
 
-    // Todo Title
     const titleInput = document.createElement('input');
     titleInput.type = 'text';
     titleInput.value = todo.title;
     titleInput.disabled = true;
     titleInput.classList.add('todo-title');
 
-    // Todo Date
     const dateSpan = document.createElement('span');
     dateSpan.textContent = todo.date;
     dateSpan.classList.add('todo-date');
 
-    // Mark as completed
     const toggleButton = document.createElement('button');
     toggleButton.textContent = todo.completed ? 'Undo' : 'Complete';
     toggleButton.dataset.id = todo.id;
     toggleButton.addEventListener('click', () => {
       toggleTodoCompletion(todo.id);
       renderTodos();
+      updateCalendarTodos();
     });
 
     if (todo.completed) {
       card.classList.add('completed');
     }
 
-    // Append Elements
-    card.appendChild(menuContainer); // Add menu in top-right
+    card.appendChild(menuContainer);
     card.appendChild(titleInput);
     card.appendChild(dateSpan);
     card.appendChild(toggleButton);
     
     todoList.appendChild(card);
   });
+
+  updateCalendarTodos();
 }
+
