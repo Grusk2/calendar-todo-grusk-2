@@ -1,3 +1,5 @@
+import { updateCalendarTodos } from './calender.js';
+
 const TODOS_KEY = 'todos';
 
 export function getTodos() {

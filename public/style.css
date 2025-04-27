@@ -62,7 +62,7 @@ body {
 }
 
 #calendar-body {
-	width: 110%;
+	width: 100%;
 	max-width: 750px;
 	display: flex;
 	flex-direction: column;
@@ -132,7 +132,7 @@ body {
 }
 
 #todo-section {
-	width: 110%;
+	width: 100%;
 	max-width: 750px;
 	background: #181818;
 	padding: 40px;
@@ -186,7 +186,7 @@ body {
 	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 	gap: 20px;
 	width: 100%;
-	max-width: 700px;
+	max-width: 750px;
 	justify-content: center;
 	align-items: stretch;
 	padding: 20px;
@@ -326,17 +326,94 @@ button:hover {
 	background: #444;
 }
 
-@media (max-width: 600px) {
-	#todo-list {
-		grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
-	}
+/* Ipad storlek */
+@media (max-width: 1000px) {
+    #calendar-body,
+    #todo-section,
+    #todo-list {
+        width: 100%;
+        max-width: 600px;
+    }
 
-	.calendar-cell {
-		font-size: 1rem;
-		height: 70px;
-	}
+    .calendar-days {
+        grid-template-columns: repeat(7, minmax(60px, 1fr));
+        gap: 8px;
+    }
 
-	#month-navigation h2 {
-		font-size: 1.5rem;
-	}
+    .calendar-cell {
+        font-size: 1rem;
+        height: 70px;
+        min-width: 60px;
+    }
+
+    #month-navigation h2 {
+        font-size: 1.5rem;
+    }
+
+    #todo-title {
+        padding: 12px;
+    }
+
+    #save-todo {
+        padding: 8px 12px;
+    }
 }
+
+/* Typisk Telefon storlek */
+@media (max-width: 600px) {
+    #calendar-body,
+    #todo-section,
+    #todo-list {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .calendar-days {
+        grid-template-columns: repeat(7, minmax(45px, 1fr));
+        gap: 5px;
+    }
+
+    .calendar-cell {
+        font-size: 0.9rem;
+        height: 60px;
+        min-width: 45px;
+    }
+
+    #month-navigation h2 {
+        font-size: 1.3rem;
+    }
+
+    #todo-section {
+        padding: 20px;
+    }
+}
+
+/* Minsta telefoner */
+@media (max-width: 400px) {
+    .calendar-days {
+        grid-template-columns: repeat(7, minmax(35px, 1fr));
+        gap: 3px;
+    }
+
+    .calendar-cell {
+        font-size: 0.8rem;
+        height: 45px;
+        min-width: 35px;
+    }
+
+    #month-navigation h2 {
+        font-size: 1.1rem;
+    }
+
+    #todo-title {
+        padding: 8px;
+    }
+
+    #save-todo {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+}
+
+
+
